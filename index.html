@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디어 공유</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .card {
+            margin: 10px;
+            width: calc(33% - 20px);
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card h5 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        #ideaList {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: #777;
+            text-align: right;
+            margin-right: 20px; /* Adjusted margin to shift the timestamp left */
+        }
+        .divider {
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #777;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">아이디어 공유</h1>
+        <div class="mb-3">
+            <input type="text" id="title" class="form-control" placeholder="제목을 입력하세요">
+        </div>
+        <div class="mb-3">
+            <textarea id="idea" class="form-control" rows="3" placeholder="아이디어를 입력하세요"></textarea>
+        </div>
+        <button id="addButton" class="btn btn-primary w-100">추가</button>
+        <div id="ideaList"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBag2LogSwBly2vHUmBvIGEYa9opc2H1mU",
+            authDomain: "today-15009.firebaseapp.com",
+            projectId: "today-15009",
+            storageBucket: "today-15009.appspot.com",
+            messagingSenderId: "832266301096",
+            appId: "1:832266301096:web:5ce323335a64282f811c9d",
+            measurementId: "G-VGG4HNVQP7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        const addButton = document.getElementById('addButton');
+        const ideaList = document.getElementById('ideaList');
+
+        addButton.addEventListener('click', () => {
+            const title = document.getElementById('title').value;
+            const idea = document.getElementById('idea').value;
+            const timestamp = new Date().toLocaleString();
+
+            if (title && idea) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <button class="close-btn">&times;</button>
+                    <div class="card-body">
+                        <div class="timestamp">${timestamp}</div>
+                        <div class="divider"></div>
+                        <h5 class="card-title">${title}</h5>
+                        <p class="card-text">${idea}</p>
+                    </div>
+                `;
+                ideaList.appendChild(card);
+
+                document.getElementById('title').value = '';
+                document.getElementById('idea').value = '';
+
+                // Add event listener for delete functionality
+                card.querySelector('.close-btn').addEventListener('click', () => {
+                    ideaList.removeChild(card);
+                });
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
